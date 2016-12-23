@@ -220,9 +220,9 @@ func GetDatabases() (*[]Database, []error) {
 		return nil, errs
 	}
 
-	datacenterResponse := DatabasesResponse{}
-	json.Unmarshal([]byte(body), &datacenterResponse)
-	databases := datacenterResponse.Embedded.Databases
+	databaseResponse := databasesResponse{}
+	json.Unmarshal([]byte(body), &databaseResponse)
+	databases := databaseResponse.Embedded.Databases
 
 	return &databases, nil
 }

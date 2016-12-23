@@ -31,8 +31,7 @@ type Database struct {
 	} `json:"_embedded"`
 }
 
-//DatabasesResponse structure (an array of Datacenter)
-type DatabasesResponse struct {
+type databasesResponse struct {
 	Embedded struct {
 		Databases []Database `json:"applications"`
 	} `json:"_embedded"`
