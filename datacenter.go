@@ -21,8 +21,7 @@ type Datacenter struct {
 	Slug     string `json:"slug"`
 }
 
-//DatacentersResponse structure (an array of Datacenter)
-type DatacentersResponse struct {
+type datacentersResponse struct {
 	Embedded struct {
 		Datacenters []Datacenter `json:"datacenters"`
 	} `json:"_embedded"`

@@ -85,9 +85,9 @@ func GetAccount() (*Account, []error) {
 		return nil, errs
 	}
 
-	accountResponse := AccountResponse{}
-	json.Unmarshal([]byte(body), &accountResponse)
-	firstAccount := accountResponse.Embedded.Accounts[0]
+	accountsResponse := accountResponse{}
+	json.Unmarshal([]byte(body), &accountsResponse)
+	firstAccount := accountsResponse.Embedded.Accounts[0]
 
 	return &firstAccount, nil
 }
@@ -103,7 +103,7 @@ func GetDeployments() (*[]Deployment, []error) {
 		return nil, errs
 	}
 
-	deploymentResponse := DeploymentsResponse{}
+	deploymentResponse := deploymentsResponse{}
 	json.Unmarshal([]byte(body), &deploymentResponse)
 	deployments := deploymentResponse.Embedded.Deployments
 
@@ -160,7 +160,7 @@ func GetVersionsForDeployment(deploymentid string) (*[]VersionTransition, []erro
 		return nil, errs
 	}
 
-	versionsResponse := VersionsResponse{}
+	versionsResponse := versionsResponse{}
 	json.Unmarshal([]byte(body), &versionsResponse)
 	versionTransitions := versionsResponse.Embedded.VersionTransitions
 
@@ -180,7 +180,7 @@ func GetClusters() (*[]Cluster, []error) {
 		return nil, errs
 	}
 
-	clustersResponse := ClustersResponse{}
+	clustersResponse := clusterResponse{}
 	json.Unmarshal([]byte(body), &clustersResponse)
 	clusters := clustersResponse.Embedded.Clusters
 
@@ -200,7 +200,7 @@ func GetDatacenters() (*[]Datacenter, []error) {
 		return nil, errs
 	}
 
-	datacenterResponse := DatacentersResponse{}
+	datacenterResponse := datacentersResponse{}
 	json.Unmarshal([]byte(body), &datacenterResponse)
 	datacenters := datacenterResponse.Embedded.Datacenters
 

@@ -21,8 +21,7 @@ type Account struct {
 	Name string `json:"name"`
 }
 
-// AccountResponse holding structure
-type AccountResponse struct {
+type accountResponse struct {
 	Embedded struct {
 		Accounts []Account `json:"accounts"`
 	} `json:"_embedded"`

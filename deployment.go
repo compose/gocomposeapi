@@ -42,8 +42,7 @@ type ConnectionStrings struct {
 	Direct   []string `json:"direct"`
 }
 
-// DeploymentsResponse holding structure
-type DeploymentsResponse struct {
+type deploymentsResponse struct {
 	Embedded struct {
 		Deployments []Deployment `json:"deployments"`
 	} `json:"_embedded"`
@@ -70,8 +69,7 @@ type VersionTransition struct {
 	ToVersion   string `json:"to_version"`
 }
 
-//VersionsResponse Version holding structure
-type VersionsResponse struct {
+type versionsResponse struct {
 	Embedded struct {
 		VersionTransitions []VersionTransition `json:"transitions"`
 	} `json:"_embedded"`

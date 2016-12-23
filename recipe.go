@@ -33,8 +33,7 @@ type Recipe struct {
 	} `json:"_embedded"`
 }
 
-// Recipes structure (an array of Recipe)
-type Recipes struct {
+type recipeResponse struct {
 	Embedded struct {
 		Recipes []Recipe `json:"recipes"`
 	} `json:"_embedded"`

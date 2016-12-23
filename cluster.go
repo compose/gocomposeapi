@@ -32,8 +32,7 @@ type Cluster struct {
 	Subdomain   string    `json:"subdomain"`
 }
 
-// ClustersResponse structure (an array of Cluster)
-type ClustersResponse struct {
+type clusterResponse struct {
 	Embedded struct {
 		Clusters []Cluster `json:"clusters"`
 	} `json:"_embedded"`
