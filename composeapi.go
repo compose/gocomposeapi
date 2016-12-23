@@ -62,7 +62,6 @@ func getJSON(endpoint string) (string, []error) {
 		Set("Authorization", "Bearer "+apitoken).
 		Set("Content-type", "json").
 		End()
-	fmt.Println(response.StatusCode)
 	if response.StatusCode != 200 {
 		myerrors := Errors{}
 		err := json.Unmarshal([]byte(body), &myerrors)
@@ -248,11 +247,22 @@ func GetUser() (*User, []error) {
 
 //CreateDeploymentJSON performs the call
 func CreateDeploymentJSON(params CreateDeploymentParams) (string, []error) {
-	_, body, errs := gorequest.New().Post(apibase+"deployments").
+	response, body, errs := gorequest.New().Post(apibase+"deployments").
 		Set("Authorization", "Bearer "+apitoken).
 		Set("Content-type", "application/json; charset=utf-8").
 		Send(params).
 		End()
+
+	if response.StatusCode != 202 { // Expect Accepted on success - assume error on anything else
+		myerrors := Errors{}
+		err := json.Unmarshal([]byte(body), &myerrors)
+		if err != nil {
+			errs = append(errs, errors.New("Unable to parse error - status code "+strconv.Itoa(response.StatusCode)))
+		} else {
+			errs = append(errs, errors.New(myerrors.Error))
+		}
+	}
+
 	return body, errs
 }
 
