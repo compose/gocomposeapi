@@ -114,7 +114,7 @@ func GetDeployments() (*[]Deployment, []error) {
 func GetRecipeJSON(recipeid string) (string, []error) { return getJSON("recipes/" + recipeid) }
 
 //GetRecipe gets status of Recipe
-func GetRecipe(rawmode bool, recipeid string) (*Recipe, []error) {
+func GetRecipe(recipeid string) (*Recipe, []error) {
 	body, errs := GetRecipeJSON(recipeid)
 
 	if errs != nil {
