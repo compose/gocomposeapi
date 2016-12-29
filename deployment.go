@@ -24,9 +24,9 @@ type Deployment struct {
 	Name                string            `json:"name"`
 	Type                string            `json:"type"`
 	CreatedAt           time.Time         `json:"created_at"`
-	ProvisionRecipeID   string            `json:"provision_recipe_id"`
-	CACertificateBase64 string            `json:"ca_certificate_base64"`
-	Connection          ConnectionStrings `json:"connection_strings"`
+	ProvisionRecipeID   string            `json:"provision_recipe_id,omitempty"`
+	CACertificateBase64 string            `json:"ca_certificate_base64,omitempty"`
+	Connection          ConnectionStrings `json:"connection_strings,omitempty"`
 	Links               struct {
 		ComposeWebUILink Link `json:"compose_web_ui"`
 	} `json:"_links"`
@@ -34,12 +34,12 @@ type Deployment struct {
 
 // ConnectionStrings structure
 type ConnectionStrings struct {
-	Health   string   `json:"health"`
-	SSH      string   `json:"ssh"`
-	Admin    string   `json:"admin"`
-	SSHAdmin string   `json:"ssh_admin"`
-	CLI      []string `json:"cli"`
-	Direct   []string `json:"direct"`
+	Health   string   `json:"health,omitempty"`
+	SSH      string   `json:"ssh,omitempty"`
+	Admin    string   `json:"admin,omitempty"`
+	SSHAdmin string   `json:"ssh_admin,omitempty"`
+	CLI      []string `json:"cli,omitempty"`
+	Direct   []string `json:"direct,omitempty"`
 }
 
 type deploymentsResponse struct {
