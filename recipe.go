@@ -28,6 +28,7 @@ type Recipe struct {
 	DeploymentID string    `json:"deployment_id"`
 	Name         string    `json:"name"`
 	CreatedAt    time.Time `json:"created_at"`
+	UpdatedAt    time.Time `json:"updated_at"`
 	Embedded     struct {
 		Recipes []Recipe `json:"recipes"`
 	} `json:"_embedded"`
