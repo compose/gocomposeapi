@@ -110,6 +110,25 @@ func GetDeployments() (*[]Deployment, []error) {
 	return &deployments, nil
 }
 
+//GetDeploymentJSON returns raw deployment
+func GetDeploymentJSON(deploymentid string) (string, []error) {
+	return getJSON("deployments/" + deploymentid)
+}
+
+//GetDeployment returns deployment structure
+func GetDeployment(deploymentid string) (*Deployment, []error) {
+	body, errs := GetDeploymentJSON(deploymentid)
+
+	if errs != nil {
+		return nil, errs
+	}
+
+	deployment := Deployment{}
+	json.Unmarshal([]byte(body), &deployment)
+
+	return &deployment, nil
+}
+
 //GetRecipeJSON Gets raw JSON for recipeid
 func GetRecipeJSON(recipeid string) (string, []error) { return getJSON("recipes/" + recipeid) }
 
