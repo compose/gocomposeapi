@@ -32,7 +32,7 @@ type Deployment struct {
 	} `json:"_links"`
 }
 
-// ConnectionStrings structure
+// ConnectionStrings structure, part of the Deployment struct
 type ConnectionStrings struct {
 	Health   string   `json:"health,omitempty"`
 	SSH      string   `json:"ssh,omitempty"`
@@ -42,6 +42,7 @@ type ConnectionStrings struct {
 	Direct   []string `json:"direct,omitempty"`
 }
 
+// deploymentsResource is used to represent and remove the JSON+HAL Embedded wrapper
 type deploymentsResponse struct {
 	Embedded struct {
 		Deployments []Deployment `json:"deployments"`

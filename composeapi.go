@@ -129,6 +129,59 @@ func GetDeployment(deploymentid string) (*Deployment, []error) {
 	return &deployment, nil
 }
 
+//GetScalingsJSON returns raw scalings
+func GetScalingsJSON(deploymentid string) (string, []error) {
+	return getJSON("deployments/" + deploymentid + "/scalings")
+}
+
+//GetScalings returns deployment structure
+func GetScalings(deploymentid string) (*Scalings, []error) {
+	body, errs := GetScalingsJSON(deploymentid)
+
+	if errs != nil {
+		return nil, errs
+	}
+
+	scalings := Scalings{}
+	json.Unmarshal([]byte(body), &scalings)
+
+	return &scalings, nil
+}
+
+//SetScalingsJSON sets JSON scaling and returns string respones
+func SetScalingsJSON(params ScalingsParams) (string, []error) {
+	response, body, errs := gorequest.New().Post(apibase+"deployments/"+params.DeploymentID+"/scalings").
+		Set("Authorization", "Bearer "+apitoken).
+		Set("Content-type", "application/json; charset=utf-8").
+		Send(params).
+		End()
+
+	if response.StatusCode != 200 { // Expect Accepted on success - assume error on anything else
+		myerrors := Errors{}
+		err := json.Unmarshal([]byte(body), &myerrors)
+		if err != nil {
+			errs = append(errs, errors.New("Unable to parse error - status code "+strconv.Itoa(response.StatusCode)))
+		} else {
+			errs = append(errs, errors.New(myerrors.Error))
+		}
+	}
+
+	return body, errs
+}
+
+//SetScalings sets scale and returns recipe for scaling
+func SetScalings(scalingsParams ScalingsParams) (*Recipe, []error) {
+	body, errs := SetScalingsJSON(scalingsParams)
+	if errs != nil {
+		return nil, errs
+	}
+
+	recipe := Recipe{}
+	json.Unmarshal([]byte(body), &recipe)
+
+	return &recipe, nil
+}
+
 //GetRecipeJSON Gets raw JSON for recipeid
 func GetRecipeJSON(recipeid string) (string, []error) { return getJSON("recipes/" + recipeid) }
 
