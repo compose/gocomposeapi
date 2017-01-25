@@ -20,12 +20,11 @@ import (
 	"fmt"
 	"github.com/parnurzeal/gorequest"
 	"log"
-	"os"
 	"strconv"
 )
 
 var (
-	apitoken = os.Getenv("COMPOSEAPITOKEN")
+	apitoken = ""
 )
 
 const (
@@ -54,6 +53,11 @@ func printJSON(jsontext string) {
 		log.Fatal(err)
 	}
 	fmt.Println(string(indentedjson))
+}
+
+//SetAPIToken overrides the API token
+func SetAPIToken(newtoken string) {
+	apitoken = newtoken
 }
 
 //GetJSON Gets JSON string of content at an endpoint
