@@ -23,13 +23,21 @@ import (
 	"strconv"
 )
 
-var (
-	apitoken = ""
-)
+var ()
 
 const (
 	apibase = "https://api.compose.io/2016-07/"
 )
+
+type Client struct {
+	apiToken string
+}
+
+func NewClient(apiToken string) (*Client, error) {
+	return &Client{
+		apiToken: apiToken,
+	}, nil
+}
 
 // Link structure for JSON+HAL links
 type Link struct {
@@ -56,14 +64,14 @@ func printJSON(jsontext string) {
 }
 
 //SetAPIToken overrides the API token
-func SetAPIToken(newtoken string) {
-	apitoken = newtoken
+func (c *Client) SetAPIToken(newtoken string) {
+	c.apiToken = newtoken
 }
 
 //GetJSON Gets JSON string of content at an endpoint
-func getJSON(endpoint string) (string, []error) {
+func (c *Client) getJSON(endpoint string) (string, []error) {
 	response, body, errs := gorequest.New().Get(apibase+endpoint).
-		Set("Authorization", "Bearer "+apitoken).
+		Set("Authorization", "Bearer "+c.apiToken).
 		Set("Content-type", "json").
 		End()
 	if response.StatusCode != 200 {
@@ -79,11 +87,11 @@ func getJSON(endpoint string) (string, []error) {
 }
 
 //GetAccountJSON gets JSON string from endpoint
-func GetAccountJSON() (string, []error) { return getJSON("accounts") }
+func (c *Client) GetAccountJSON() (string, []error) { return c.getJSON("accounts") }
 
 //GetAccount Gets first Account struct from account endpoint
-func GetAccount() (*Account, []error) {
-	body, errs := GetAccountJSON()
+func (c *Client) GetAccount() (*Account, []error) {
+	body, errs := c.GetAccountJSON()
 
 	if errs != nil {
 		return nil, errs
@@ -97,11 +105,11 @@ func GetAccount() (*Account, []error) {
 }
 
 //GetDeploymentsJSON returns raw deployment
-func GetDeploymentsJSON() (string, []error) { return getJSON("deployments") }
+func (c *Client) GetDeploymentsJSON() (string, []error) { return c.getJSON("deployments") }
 
 //GetDeployments returns deployment structure
-func GetDeployments() (*[]Deployment, []error) {
-	body, errs := GetDeploymentsJSON()
+func (c *Client) GetDeployments() (*[]Deployment, []error) {
+	body, errs := c.GetDeploymentsJSON()
 
 	if errs != nil {
 		return nil, errs
@@ -115,13 +123,13 @@ func GetDeployments() (*[]Deployment, []error) {
 }
 
 //GetDeploymentJSON returns raw deployment
-func GetDeploymentJSON(deploymentid string) (string, []error) {
-	return getJSON("deployments/" + deploymentid)
+func (c *Client) GetDeploymentJSON(deploymentid string) (string, []error) {
+	return c.getJSON("deployments/" + deploymentid)
 }
 
 //GetDeployment returns deployment structure
-func GetDeployment(deploymentid string) (*Deployment, []error) {
-	body, errs := GetDeploymentJSON(deploymentid)
+func (c *Client) GetDeployment(deploymentid string) (*Deployment, []error) {
+	body, errs := c.GetDeploymentJSON(deploymentid)
 
 	if errs != nil {
 		return nil, errs
@@ -134,13 +142,13 @@ func GetDeployment(deploymentid string) (*Deployment, []error) {
 }
 
 //GetScalingsJSON returns raw scalings
-func GetScalingsJSON(deploymentid string) (string, []error) {
-	return getJSON("deployments/" + deploymentid + "/scalings")
+func (c *Client) GetScalingsJSON(deploymentid string) (string, []error) {
+	return c.getJSON("deployments/" + deploymentid + "/scalings")
 }
 
 //GetScalings returns deployment structure
-func GetScalings(deploymentid string) (*Scalings, []error) {
-	body, errs := GetScalingsJSON(deploymentid)
+func (c *Client) GetScalings(deploymentid string) (*Scalings, []error) {
+	body, errs := c.GetScalingsJSON(deploymentid)
 
 	if errs != nil {
 		return nil, errs
@@ -153,9 +161,9 @@ func GetScalings(deploymentid string) (*Scalings, []error) {
 }
 
 //SetScalingsJSON sets JSON scaling and returns string respones
-func SetScalingsJSON(params ScalingsParams) (string, []error) {
+func (c *Client) SetScalingsJSON(params ScalingsParams) (string, []error) {
 	response, body, errs := gorequest.New().Post(apibase+"deployments/"+params.DeploymentID+"/scalings").
-		Set("Authorization", "Bearer "+apitoken).
+		Set("Authorization", "Bearer "+c.apiToken).
 		Set("Content-type", "application/json; charset=utf-8").
 		Send(params).
 		End()
@@ -174,8 +182,8 @@ func SetScalingsJSON(params ScalingsParams) (string, []error) {
 }
 
 //SetScalings sets scale and returns recipe for scaling
-func SetScalings(scalingsParams ScalingsParams) (*Recipe, []error) {
-	body, errs := SetScalingsJSON(scalingsParams)
+func (c *Client) SetScalings(scalingsParams ScalingsParams) (*Recipe, []error) {
+	body, errs := c.SetScalingsJSON(scalingsParams)
 	if errs != nil {
 		return nil, errs
 	}
@@ -187,11 +195,13 @@ func SetScalings(scalingsParams ScalingsParams) (*Recipe, []error) {
 }
 
 //GetRecipeJSON Gets raw JSON for recipeid
-func GetRecipeJSON(recipeid string) (string, []error) { return getJSON("recipes/" + recipeid) }
+func (c *Client) GetRecipeJSON(recipeid string) (string, []error) {
+	return c.getJSON("recipes/" + recipeid)
+}
 
 //GetRecipe gets status of Recipe
-func GetRecipe(recipeid string) (*Recipe, []error) {
-	body, errs := GetRecipeJSON(recipeid)
+func (c *Client) GetRecipe(recipeid string) (*Recipe, []error) {
+	body, errs := c.GetRecipeJSON(recipeid)
 
 	if errs != nil {
 		return nil, errs
@@ -204,13 +214,13 @@ func GetRecipe(recipeid string) (*Recipe, []error) {
 }
 
 //GetRecipesForDeploymentJSON returns raw JSON for getRecipesforDeployment
-func GetRecipesForDeploymentJSON(deploymentid string) (string, []error) {
-	return getJSON("deployments/" + deploymentid + "/recipes")
+func (c *Client) GetRecipesForDeploymentJSON(deploymentid string) (string, []error) {
+	return c.getJSON("deployments/" + deploymentid + "/recipes")
 }
 
 //GetRecipesForDeployment gets deployment recipe life
-func GetRecipesForDeployment(deploymentid string) (*[]Recipe, []error) {
-	body, errs := GetRecipesForDeploymentJSON(deploymentid)
+func (c *Client) GetRecipesForDeployment(deploymentid string) (*[]Recipe, []error) {
+	body, errs := c.GetRecipesForDeploymentJSON(deploymentid)
 
 	if errs != nil {
 		return nil, errs
@@ -224,13 +234,13 @@ func GetRecipesForDeployment(deploymentid string) (*[]Recipe, []error) {
 }
 
 //GetVersionsForDeploymentJSON returns raw JSON for getVersionsforDeployment
-func GetVersionsForDeploymentJSON(deploymentid string) (string, []error) {
-	return getJSON("deployments/" + deploymentid + "/versions")
+func (c *Client) GetVersionsForDeploymentJSON(deploymentid string) (string, []error) {
+	return c.getJSON("deployments/" + deploymentid + "/versions")
 }
 
 //GetVersionsForDeployment gets deployment recipe life
-func GetVersionsForDeployment(deploymentid string) (*[]VersionTransition, []error) {
-	body, errs := GetVersionsForDeploymentJSON(deploymentid)
+func (c *Client) GetVersionsForDeployment(deploymentid string) (*[]VersionTransition, []error) {
+	body, errs := c.GetVersionsForDeploymentJSON(deploymentid)
 
 	if errs != nil {
 		return nil, errs
@@ -244,13 +254,13 @@ func GetVersionsForDeployment(deploymentid string) (*[]VersionTransition, []erro
 }
 
 //GetClustersJSON gets clusters available
-func GetClustersJSON() (string, []error) {
-	return getJSON("clusters")
+func (c *Client) GetClustersJSON() (string, []error) {
+	return c.getJSON("clusters")
 }
 
 //GetClusters gets clusters available
-func GetClusters() (*[]Cluster, []error) {
-	body, errs := GetClustersJSON()
+func (c *Client) GetClusters() (*[]Cluster, []error) {
+	body, errs := c.GetClustersJSON()
 
 	if errs != nil {
 		return nil, errs
@@ -264,13 +274,13 @@ func GetClusters() (*[]Cluster, []error) {
 }
 
 //GetDatacentersJSON gets datacenters available as a string
-func GetDatacentersJSON() (string, []error) {
-	return getJSON("datacenters")
+func (c *Client) GetDatacentersJSON() (string, []error) {
+	return c.getJSON("datacenters")
 }
 
 //GetDatacenters gets datacenters available as a Go struct
-func GetDatacenters() (*[]Datacenter, []error) {
-	body, errs := GetDatacentersJSON()
+func (c *Client) GetDatacenters() (*[]Datacenter, []error) {
+	body, errs := c.GetDatacentersJSON()
 
 	if errs != nil {
 		return nil, errs
@@ -284,13 +294,13 @@ func GetDatacenters() (*[]Datacenter, []error) {
 }
 
 //GetDatabasesJSON gets databases available as a string
-func GetDatabasesJSON() (string, []error) {
-	return getJSON("databases")
+func (c *Client) GetDatabasesJSON() (string, []error) {
+	return c.getJSON("databases")
 }
 
 //GetDatabases gets databases available as a Go struct
-func GetDatabases() (*[]Database, []error) {
-	body, errs := GetDatabasesJSON()
+func (c *Client) GetDatabases() (*[]Database, []error) {
+	body, errs := c.GetDatabasesJSON()
 
 	if errs != nil {
 		return nil, errs
@@ -304,13 +314,13 @@ func GetDatabases() (*[]Database, []error) {
 }
 
 //GetUserJSON returns user JSON string
-func GetUserJSON() (string, []error) {
-	return getJSON("user")
+func (c *Client) GetUserJSON() (string, []error) {
+	return c.getJSON("user")
 }
 
 //GetUser Gets information about user
-func GetUser() (*User, []error) {
-	body, errs := GetUserJSON()
+func (c *Client) GetUser() (*User, []error) {
+	body, errs := c.GetUserJSON()
 
 	if errs != nil {
 		return nil, errs
@@ -322,9 +332,9 @@ func GetUser() (*User, []error) {
 }
 
 //CreateDeploymentJSON performs the call
-func CreateDeploymentJSON(params CreateDeploymentParams) (string, []error) {
+func (c *Client) CreateDeploymentJSON(params CreateDeploymentParams) (string, []error) {
 	response, body, errs := gorequest.New().Post(apibase+"deployments").
-		Set("Authorization", "Bearer "+apitoken).
+		Set("Authorization", "Bearer "+c.apiToken).
 		Set("Content-type", "application/json; charset=utf-8").
 		Send(params).
 		End()
@@ -343,11 +353,11 @@ func CreateDeploymentJSON(params CreateDeploymentParams) (string, []error) {
 }
 
 //CreateDeployment creates a deployment
-func CreateDeployment(params CreateDeploymentParams) (*Deployment, []error) {
+func (c *Client) CreateDeployment(params CreateDeploymentParams) (*Deployment, []error) {
 
 	// This is a POST not a GET, so it builds its own request
 
-	body, errs := CreateDeploymentJSON(params)
+	body, errs := c.CreateDeploymentJSON(params)
 
 	if errs != nil {
 		return nil, errs
