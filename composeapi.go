@@ -23,8 +23,6 @@ import (
 	"strconv"
 )
 
-var ()
-
 const (
 	apibase = "https://api.compose.io/2016-07/"
 )
