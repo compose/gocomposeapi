@@ -16,10 +16,7 @@ package composeapi
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
-	"github.com/parnurzeal/gorequest"
-	"strconv"
 )
 
 // Scalings represents the used, allocated, starting and minimum unit scale
@@ -41,7 +38,7 @@ type ScalingsParams struct {
 
 //GetScalingsJSON returns raw scalings
 func (c *Client) GetScalingsJSON(deploymentid string) (string, []error) {
-	return c.getJSON("deployments/" + deploymentid + "/scalings")
+	return c.reqJSON(fmt.Sprintf("deployments/%s/scalings", deploymentid), "GET", nil)
 }
 
 //GetScalings returns deployment structure
@@ -60,23 +57,7 @@ func (c *Client) GetScalings(deploymentid string) (*Scalings, []error) {
 
 //SetScalingsJSON sets JSON scaling and returns string respones
 func (c *Client) SetScalingsJSON(params ScalingsParams) (string, []error) {
-	response, body, errs := gorequest.New().Post(apibase+"deployments/"+params.DeploymentID+"/scalings").
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "application/json; charset=utf-8").
-		Send(params).
-		End()
-
-	if response.StatusCode != 200 { // Expect Accepted on success - assume error on anything else
-		myerrors := Errors{}
-		err := json.Unmarshal([]byte(body), &myerrors)
-		if err != nil {
-			errs = append(errs, errors.New("Unable to parse error - status code "+strconv.Itoa(response.StatusCode)))
-		} else {
-			errs = append(errs, errors.New(fmt.Sprintf("%v", myerrors.Error)))
-		}
-	}
-
-	return body, errs
+	return c.reqJSON(fmt.Sprintf("deployments/%s/scalings", params.DeploymentID), "POST", params)
 }
 
 //SetScalings sets scale and returns recipe for scaling

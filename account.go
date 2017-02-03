@@ -32,7 +32,7 @@ type accountResponse struct {
 }
 
 //GetAccountJSON gets JSON string from endpoint
-func (c *Client) GetAccountJSON() (string, []error) { return c.getJSON("accounts") }
+func (c *Client) GetAccountJSON() (string, []error) { return c.reqJSON("accounts", "GET", nil) }
 
 //GetAccount Gets first Account struct from account endpoint
 func (c *Client) GetAccount() (*Account, []error) {

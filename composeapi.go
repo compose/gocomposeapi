@@ -15,12 +15,12 @@
 package composeapi
 
 import (
+	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
-	"github.com/parnurzeal/gorequest"
+	"io/ioutil"
 	"log"
-	"strconv"
+	"net/http"
 )
 
 const (
@@ -66,20 +66,41 @@ func (c *Client) SetAPIToken(newtoken string) {
 	c.apiToken = newtoken
 }
 
-//GetJSON Gets JSON string of content at an endpoint
-func (c *Client) getJSON(endpoint string) (string, []error) {
-	response, body, errs := gorequest.New().Get(apibase+endpoint).
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "json").
-		End()
-	if response.StatusCode != 200 {
-		myerrors := Errors{}
-		err := json.Unmarshal([]byte(body), &myerrors)
-		if err != nil {
-			errs = append(errs, errors.New("Unable to parse error - status code "+strconv.Itoa(response.StatusCode)))
-		} else {
-			errs = append(errs, errors.New(fmt.Sprintf("%v", myerrors.Error)))
-		}
+func (c *Client) reqJSON(endpoint, method string, body interface{}) (string, []error) {
+	buffer := new(bytes.Buffer)
+	err := json.NewEncoder(buffer).Encode(body)
+	if err != nil {
+		return "", []error{err}
 	}
-	return body, errs
+
+	req, err := http.NewRequest(method, apibase+endpoint, buffer)
+	if err != nil {
+		return "", []error{err}
+	}
+
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", c.apiToken))
+	req.Header.Add("Content-type", "application/json")
+
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		errs := []error{err}
+		responseErrors := Errors{}
+		err := json.NewDecoder(resp.Body).Decode(&responseErrors)
+		if err != nil {
+			errs = append(errs, fmt.Errorf("Unable to parse API errors - status code %d", resp.StatusCode))
+		} else {
+			for responseErrType, responseErrs := range responseErrors.Error {
+				for _, err := range responseErrs {
+					errs = append(errs, fmt.Errorf("%s: %s", responseErrType, err))
+				}
+			}
+		}
+		return "", errs
+	}
+
+	respBodyData, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", []error{err}
+	}
+	return string(respBodyData), nil
 }

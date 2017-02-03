@@ -16,6 +16,7 @@ package composeapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -43,7 +44,7 @@ type recipeResponse struct {
 
 //GetRecipeJSON Gets raw JSON for recipeid
 func (c *Client) GetRecipeJSON(recipeid string) (string, []error) {
-	return c.getJSON("recipes/" + recipeid)
+	return c.reqJSON(fmt.Sprintf("recipes/%s", recipeid), "GET", nil)
 }
 
 //GetRecipe gets status of Recipe
@@ -62,7 +63,7 @@ func (c *Client) GetRecipe(recipeid string) (*Recipe, []error) {
 
 //GetRecipesForDeploymentJSON returns raw JSON for getRecipesforDeployment
 func (c *Client) GetRecipesForDeploymentJSON(deploymentid string) (string, []error) {
-	return c.getJSON("deployments/" + deploymentid + "/recipes")
+	return c.reqJSON(fmt.Sprintf("deployments/%s/recipes", deploymentid), "GET", nil)
 }
 
 //GetRecipesForDeployment gets deployment recipe life

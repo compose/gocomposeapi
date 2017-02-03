@@ -41,7 +41,7 @@ type clusterResponse struct {
 
 //GetClustersJSON gets clusters available
 func (c *Client) GetClustersJSON() (string, []error) {
-	return c.getJSON("clusters")
+	return c.reqJSON("clusters", "GET", nil)
 }
 
 //GetClusters gets clusters available

@@ -33,7 +33,7 @@ type datacentersResponse struct {
 
 //GetDatacentersJSON gets datacenters available as a string
 func (c *Client) GetDatacentersJSON() (string, []error) {
-	return c.getJSON("datacenters")
+	return c.reqJSON("datacenters", "GET", nil)
 }
 
 //GetDatacenters gets datacenters available as a Go struct

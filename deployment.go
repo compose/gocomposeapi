@@ -16,10 +16,7 @@ package composeapi
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
-	"github.com/parnurzeal/gorequest"
-	"strconv"
 	"time"
 )
 
@@ -83,23 +80,7 @@ type versionsResponse struct {
 
 //CreateDeploymentJSON performs the call
 func (c *Client) CreateDeploymentJSON(params CreateDeploymentParams) (string, []error) {
-	response, body, errs := gorequest.New().Post(apibase+"deployments").
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "application/json; charset=utf-8").
-		Send(params).
-		End()
-
-	if response.StatusCode != 202 { // Expect Accepted on success - assume error on anything else
-		myerrors := Errors{}
-		err := json.Unmarshal([]byte(body), &myerrors)
-		if err != nil {
-			errs = append(errs, errors.New("Unable to parse error - status code "+strconv.Itoa(response.StatusCode)))
-		} else {
-			errs = append(errs, errors.New(fmt.Sprintf("%v", myerrors.Error)))
-		}
-	}
-
-	return body, errs
+	return c.reqJSON("deployments", "POST", params)
 }
 
 //CreateDeployment creates a deployment
@@ -120,7 +101,9 @@ func (c *Client) CreateDeployment(params CreateDeploymentParams) (*Deployment, [
 }
 
 //GetDeploymentsJSON returns raw deployment
-func (c *Client) GetDeploymentsJSON() (string, []error) { return c.getJSON("deployments") }
+func (c *Client) GetDeploymentsJSON() (string, []error) {
+	return c.reqJSON("deployments", "GET", nil)
+}
 
 //GetDeployments returns deployment structure
 func (c *Client) GetDeployments() (*[]Deployment, []error) {
@@ -139,7 +122,7 @@ func (c *Client) GetDeployments() (*[]Deployment, []error) {
 
 //GetDeploymentJSON returns raw deployment
 func (c *Client) GetDeploymentJSON(deploymentid string) (string, []error) {
-	return c.getJSON("deployments/" + deploymentid)
+	return c.reqJSON(fmt.Sprintf("deployments/%s", deploymentid), "GET", nil)
 }
 
 //GetDeployment returns deployment structure

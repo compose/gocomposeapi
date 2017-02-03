@@ -25,7 +25,7 @@ type User struct {
 
 //GetUserJSON returns user JSON string
 func (c *Client) GetUserJSON() (string, []error) {
-	return c.getJSON("user")
+	return c.reqJSON("user", "GET", nil)
 }
 
 //GetUser Gets information about user

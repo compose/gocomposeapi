@@ -16,6 +16,7 @@ package composeapi
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 //Version structure
@@ -28,7 +29,7 @@ type Version struct {
 
 //GetVersionsForDeploymentJSON returns raw JSON for getVersionsforDeployment
 func (c *Client) GetVersionsForDeploymentJSON(deploymentid string) (string, []error) {
-	return c.getJSON("deployments/" + deploymentid + "/versions")
+	return c.reqJSON(fmt.Sprintf("deployments/%s/versions", deploymentid), "GET", nil)
 }
 
 //GetVersionsForDeployment gets deployment recipe life
@@ -63,7 +64,7 @@ type databasesResponse struct {
 
 //GetDatabasesJSON gets databases available as a string
 func (c *Client) GetDatabasesJSON() (string, []error) {
-	return c.getJSON("databases")
+	return c.reqJSON("databases", "GET", nil)
 }
 
 //GetDatabases gets databases available as a Go struct
