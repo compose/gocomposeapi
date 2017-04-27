@@ -112,13 +112,18 @@ func (c *Client) GetBackupDetailsForDeployment(deploymentid string, backupid str
 
 //RestoreBackupParams Parameters to be completed before creating a deployment
 type RestoreBackupParams struct {
-	DeploymentID string `json:"-"`
-	BackupID     string `json:"-"`
-	Name         string `json:"name"`
-	ClusterID    string `json:"cluster_id,omitempty"`
-	Datacenter   string `json:"datacenter,omitempty"`
-	Version      string `json:"version,omitempty"`
-	SSL          bool   `json:"ssl,omitempty"`
+	DeploymentID string                        `json:"-"`
+	BackupID     string                        `json:"-"`
+	Deployment   RestoreBackupDeploymentParams `json:"deployment"`
+}
+
+//RestoreBackupDeploymentParams are the parameters for an actual
+type RestoreBackupDeploymentParams struct {
+	Name       string `json:"name"`
+	ClusterID  string `json:"cluster_id,omitempty"`
+	Datacenter string `json:"datacenter,omitempty"`
+	Version    string `json:"version,omitempty"`
+	SSL        bool   `json:"ssl,omitempty"`
 }
 
 //RestoreBackupJSON performs the call
