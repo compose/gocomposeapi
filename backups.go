@@ -109,3 +109,52 @@ func (c *Client) GetBackupDetailsForDeployment(deploymentid string, backupid str
 
 	return &backup, nil
 }
+
+//RestoreBackupParams Parameters to be completed before creating a deployment
+type RestoreBackupParams struct {
+	DeploymentID string `json:"-"`
+	BackupID     string `json:"-"`
+	Name         string `json:"name"`
+	ClusterID    string `json:"cluster_id,omitempty"`
+	Datacenter   string `json:"datacenter,omitempty"`
+	Version      string `json:"version,omitempty"`
+	SSL          bool   `json:"ssl,omitempty"`
+}
+
+//RestoreBackupJSON performs the call
+func (c *Client) RestoreBackupJSON(params RestoreBackupParams) (string, []error) {
+	response, body, errs := gorequest.New().Post(apibase+"deployments/"+params.DeploymentID+"/backups/"+params.BackupID).
+		Set("Authorization", "Bearer "+c.apiToken).
+		Set("Content-type", "application/json; charset=utf-8").
+		Send(params).
+		End()
+
+	if response.StatusCode != 202 { // Expect Accepted on success - assume error on anything else
+		myerrors := Errors{}
+		err := json.Unmarshal([]byte(body), &myerrors)
+		if err != nil {
+			errs = append(errs, fmt.Errorf("Unable to parse error - status code %d", response.StatusCode))
+		} else {
+			errs = append(errs, fmt.Errorf("%v", myerrors.Error))
+		}
+	}
+
+	return body, errs
+}
+
+//RestoreBackup creates a deployment
+func (c *Client) RestoreBackup(params RestoreBackupParams) (*Deployment, []error) {
+
+	// This is a POST not a GET, so it builds its own request
+
+	body, errs := c.RestoreBackupJSON(params)
+
+	if errs != nil {
+		return nil, errs
+	}
+
+	deployed := Deployment{}
+	json.Unmarshal([]byte(body), &deployed)
+
+	return &deployed, nil
+}
