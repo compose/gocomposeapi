@@ -64,7 +64,7 @@ func (c *Client) StartBackupForDeploymentJSON(deploymentid string) (string, []er
 		Set("Content-type", "application/json; charset=utf-8").
 		End()
 
-	if response.StatusCode != 200 { // Expect Accepted on success - assume error on anything else
+	if response.StatusCode != 202 { // Expect Accepted on success - assume error on anything else
 		myerrors := Errors{}
 		err := json.Unmarshal([]byte(body), &myerrors)
 		if err != nil {
