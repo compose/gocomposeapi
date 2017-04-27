@@ -70,7 +70,7 @@ func (c *Client) SetScalingsJSON(params ScalingsParams) (string, []error) {
 		myerrors := Errors{}
 		err := json.Unmarshal([]byte(body), &myerrors)
 		if err != nil {
-			errs = append(errs, fmt.Errorf("Unable to parse error - status code %d", response.StatusCode))
+			errs = append(errs, fmt.Errorf("Unable to parse error - status code %d - body %s", response.StatusCode, response.Body))
 		} else {
 			errs = append(errs, fmt.Errorf("%v", myerrors.Error))
 		}
