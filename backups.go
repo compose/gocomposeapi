@@ -28,6 +28,7 @@ type Backup struct {
 	Name         string `json:"name"`
 	Type         string `json:"type"`
 	Status       string `json:"status"`
+	DownloadLink string `json:"download_link"`
 }
 
 // backupsResponse is used to represent and remove the JSON+HAL Embedded wrapper
@@ -37,12 +38,12 @@ type backupsResponse struct {
 	} `json:"_embedded"`
 }
 
-//GetBackupsForDeploymentJSON returns raw deployment
+//GetBackupsForDeploymentJSON returns backup details for deployment
 func (c *Client) GetBackupsForDeploymentJSON(deploymentid string) (string, []error) {
 	return c.getJSON("deployments/" + deploymentid + "/backups")
 }
 
-//GetBackupsForDeployment returns deployment structure
+//GetBackupsForDeployment returns backup details for deployment
 func (c *Client) GetBackupsForDeployment(deploymentid string) (*[]Backup, []error) {
 	body, errs := c.GetBackupsForDeploymentJSON(deploymentid)
 
@@ -57,7 +58,7 @@ func (c *Client) GetBackupsForDeployment(deploymentid string) (*[]Backup, []erro
 	return &Backups, nil
 }
 
-//StartBackupForDeploymentJSON sets JSON scaling and returns string respones
+//StartBackupForDeploymentJSON starts backup and returns JSON response
 func (c *Client) StartBackupForDeploymentJSON(deploymentid string) (string, []error) {
 	response, body, errs := gorequest.New().Post(apibase+"deployments/"+deploymentid+"/backups").
 		Set("Authorization", "Bearer "+c.apiToken).
@@ -77,7 +78,7 @@ func (c *Client) StartBackupForDeploymentJSON(deploymentid string) (string, []er
 	return body, errs
 }
 
-//StartBackupForDeployment sets scale and returns recipe for scaling
+//StartBackupForDeployment starts backup and returns recipe
 func (c *Client) StartBackupForDeployment(deploymentid string) (*Recipe, []error) {
 	body, errs := c.StartBackupForDeploymentJSON(deploymentid)
 	if errs != nil {
@@ -88,4 +89,23 @@ func (c *Client) StartBackupForDeployment(deploymentid string) (*Recipe, []error
 	json.Unmarshal([]byte(body), &recipe)
 
 	return &recipe, nil
+}
+
+//GetBackupDetailsForDeploymentJSON returns the details and download link for a backup
+func (c *Client) GetBackupDetailsForDeploymentJSON(deploymentid string, backupid string) (string, []error) {
+	return c.getJSON("deployments/" + deploymentid + "/backups/" + backupid)
+}
+
+//GetBackupDetailsForDeployment returns backup details for deployment
+func (c *Client) GetBackupDetailsForDeployment(deploymentid string, backupid string) (*Backup, []error) {
+	body, errs := c.GetBackupDetailsForDeploymentJSON(deploymentid, backupid)
+
+	if errs != nil {
+		return nil, errs
+	}
+
+	backup := Backup{}
+	json.Unmarshal([]byte(body), &backup)
+
+	return &backup, nil
 }
