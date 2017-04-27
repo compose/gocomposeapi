@@ -34,14 +34,14 @@ type backupsResponse struct {
 	} `json:"_embedded"`
 }
 
-//GetBackupsJSON returns raw deployment
-func (c *Client) GetBackupsJSON(deploymentid string) (string, []error) {
+//GetBackupsForDeploymentJSON returns raw deployment
+func (c *Client) GetBackupsForDeploymentJSON(deploymentid string) (string, []error) {
 	return c.getJSON("deployments/" + deploymentid + "/backups")
 }
 
 //GetBackups returns deployment structure
-func (c *Client) GetBackups(deploymentid string) (*[]Backup, []error) {
-	body, errs := c.GetBackupsJSON(deploymentid)
+func (c *Client) GetBackupsForDeployment(deploymentid string) (*[]Backup, []error) {
+	body, errs := c.GetBackupsForDeploymentJSON(deploymentid)
 
 	if errs != nil {
 		return nil, errs
