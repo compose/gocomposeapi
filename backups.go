@@ -16,6 +16,9 @@ package composeapi
 
 import (
 	"encoding/json"
+	"fmt"
+
+	"github.com/parnurzeal/gorequest"
 )
 
 // Backup structure
@@ -52,4 +55,38 @@ func (c *Client) GetBackupsForDeployment(deploymentid string) (*[]Backup, []erro
 	Backups := backupsResponse.Embedded.Backups
 
 	return &Backups, nil
+}
+
+//StartBackupJSON sets JSON scaling and returns string respones
+func (c *Client) StartBackupJSON(params ScalingsParams) (string, []error) {
+	response, body, errs := gorequest.New().Post(apibase+"deployments/"+params.DeploymentID+"/backups").
+		Set("Authorization", "Bearer "+c.apiToken).
+		Set("Content-type", "application/json; charset=utf-8").
+		Send(params).
+		End()
+
+	if response.StatusCode != 200 { // Expect Accepted on success - assume error on anything else
+		myerrors := Errors{}
+		err := json.Unmarshal([]byte(body), &myerrors)
+		if err != nil {
+			errs = append(errs, fmt.Errorf("Unable to parse error - status code %d", response.StatusCode))
+		} else {
+			errs = append(errs, fmt.Errorf("%v", myerrors.Error))
+		}
+	}
+
+	return body, errs
+}
+
+//StartBackup sets scale and returns recipe for scaling
+func (c *Client) StartBackup(scalingsParams ScalingsParams) (*Recipe, []error) {
+	body, errs := c.StartBackupJSON(scalingsParams)
+	if errs != nil {
+		return nil, errs
+	}
+
+	recipe := Recipe{}
+	json.Unmarshal([]byte(body), &recipe)
+
+	return &recipe, nil
 }
