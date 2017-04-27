@@ -39,7 +39,7 @@ func (c *Client) GetBackupsForDeploymentJSON(deploymentid string) (string, []err
 	return c.getJSON("deployments/" + deploymentid + "/backups")
 }
 
-//GetBackups returns deployment structure
+//GetBackupsForDeployment returns deployment structure
 func (c *Client) GetBackupsForDeployment(deploymentid string) (*[]Backup, []error) {
 	body, errs := c.GetBackupsForDeploymentJSON(deploymentid)
 
