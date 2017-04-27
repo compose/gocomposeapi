@@ -128,7 +128,7 @@ type RestoreBackupDeploymentParams struct {
 
 //RestoreBackupJSON performs the call
 func (c *Client) RestoreBackupJSON(params RestoreBackupParams) (string, []error) {
-	response, body, errs := gorequest.New().Post(apibase+"deployments/"+params.DeploymentID+"/backups/"+params.BackupID).
+	response, body, errs := gorequest.New().Post(apibase+"deployments/"+params.DeploymentID+"/backups/"+params.BackupID+"/restore").
 		Set("Authorization", "Bearer "+c.apiToken).
 		Set("Content-type", "application/json; charset=utf-8").
 		Send(params).
