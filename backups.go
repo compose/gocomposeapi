@@ -136,7 +136,6 @@ func (c *Client) RestoreBackupJSON(params RestoreBackupParams) (string, []error)
 
 	if response.StatusCode != 202 { // Expect Accepted on success - assume error on anything else
 		myerrors := Errors{}
-		fmt.Println(string(body))
 		err := json.Unmarshal([]byte(body), &myerrors)
 		if err != nil {
 			errs = append(errs, fmt.Errorf("Unable to parse error - status code %d - body %s", response.StatusCode, response.Body))
