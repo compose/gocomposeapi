@@ -57,8 +57,8 @@ func (c *Client) GetBackupsForDeployment(deploymentid string) (*[]Backup, []erro
 	return &Backups, nil
 }
 
-//StartBackupJSON sets JSON scaling and returns string respones
-func (c *Client) StartBackupJSON(params ScalingsParams) (string, []error) {
+//StartBackupForDeploymentJSON sets JSON scaling and returns string respones
+func (c *Client) StartBackupForDeploymentJSON(params ScalingsParams) (string, []error) {
 	response, body, errs := gorequest.New().Post(apibase+"deployments/"+params.DeploymentID+"/backups").
 		Set("Authorization", "Bearer "+c.apiToken).
 		Set("Content-type", "application/json; charset=utf-8").
@@ -78,9 +78,9 @@ func (c *Client) StartBackupJSON(params ScalingsParams) (string, []error) {
 	return body, errs
 }
 
-//StartBackup sets scale and returns recipe for scaling
-func (c *Client) StartBackup(scalingsParams ScalingsParams) (*Recipe, []error) {
-	body, errs := c.StartBackupJSON(scalingsParams)
+//StartBackupForDeployment sets scale and returns recipe for scaling
+func (c *Client) StartBackupForDeployment(scalingsParams ScalingsParams) (*Recipe, []error) {
+	body, errs := c.StartBackupForDeploymentJSON(scalingsParams)
 	if errs != nil {
 		return nil, errs
 	}
