@@ -33,12 +33,16 @@ type Scalings struct {
 
 //ScalingsParams represents the parameters needed to scale a deployment
 type ScalingsParams struct {
-	DeploymentID string               `json:"-"`
-	Deployment   ScalingSettingParams `json:"deployment"`
+	DeploymentID string
+	Units        int
 }
 
-//ScalingSettingParams are the actual settings
-type ScalingSettingParams struct {
+type scalingsParams struct {
+	DeploymentID string               `json:"-"`
+	Deployment   scalingSettingParams `json:"deployment"`
+}
+
+type scalingSettingParams struct {
 	Units int `json:"units"`
 }
 
@@ -63,10 +67,14 @@ func (c *Client) GetScalings(deploymentid string) (*Scalings, []error) {
 
 //SetScalingsJSON sets JSON scaling and returns string respones
 func (c *Client) SetScalingsJSON(params ScalingsParams) (string, []error) {
+	scalingsparams := scalingsParams{DeploymentID: params.DeploymentID,
+		Deployment: scalingSettingParams{Units: params.Units},
+	}
+
 	response, body, errs := gorequest.New().Post(apibase+"deployments/"+params.DeploymentID+"/scalings").
 		Set("Authorization", "Bearer "+c.apiToken).
 		Set("Content-type", "application/json; charset=utf-8").
-		Send(params).
+		Send(scalingsparams).
 		End()
 
 	if response.StatusCode != 200 { // Expect Accepted on success - assume error on anything else
