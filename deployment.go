@@ -109,7 +109,7 @@ func (c *Client) CreateDeploymentJSON(params DeploymentParams) (string, []error)
 }
 
 //CreateDeployment creates a deployment
-func (c *Client) CreateDeployment(params CreateDeploymentParams) (*Deployment, []error) {
+func (c *Client) CreateDeployment(params DeploymentParams) (*Deployment, []error) {
 
 	// This is a POST not a GET, so it builds its own request
 
