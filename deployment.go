@@ -54,7 +54,7 @@ type deploymentsResponse struct {
 }
 
 //CreateDeploymentParams Parameters to be completed before creating a deployment
-type CreateDeploymentParams struct {
+type createDeploymentParams struct {
 	Deployment DeploymentParams `json:"deployment"`
 }
 
@@ -86,11 +86,13 @@ type versionsResponse struct {
 }
 
 //CreateDeploymentJSON performs the call
-func (c *Client) CreateDeploymentJSON(params CreateDeploymentParams) (string, []error) {
+func (c *Client) CreateDeploymentJSON(params DeploymentParams) (string, []error) {
+	deploymentparams := createDeploymentParams{Deployment: params}
+
 	response, body, errs := gorequest.New().Post(apibase+"deployments").
 		Set("Authorization", "Bearer "+c.apiToken).
 		Set("Content-type", "application/json; charset=utf-8").
-		Send(params).
+		Send(deploymentparams).
 		End()
 
 	if response.StatusCode != 202 { // Expect Accepted on success - assume error on anything else
