@@ -112,13 +112,22 @@ func (c *Client) GetBackupDetailsForDeployment(deploymentid string, backupid str
 
 //RestoreBackupParams Parameters to be completed before creating a deployment
 type RestoreBackupParams struct {
-	DeploymentID string                        `json:"-"`
-	BackupID     string                        `json:"-"`
-	Deployment   RestoreBackupDeploymentParams `json:"deployment"`
+	DeploymentID string
+	BackupID     string
+	Name         string
+	ClusterID    string
+	Datacenter   string
+	Version      string
+	SSL          bool
 }
 
-//RestoreBackupDeploymentParams are the parameters for an actual
-type RestoreBackupDeploymentParams struct {
+type restoreBackupParams struct {
+	DeploymentID string                        `json:"-"`
+	BackupID     string                        `json:"-"`
+	Deployment   restoreBackupDeploymentParams `json:"deployment"`
+}
+
+type restoreBackupDeploymentParams struct {
 	Name       string `json:"name"`
 	ClusterID  string `json:"cluster_id,omitempty"`
 	Datacenter string `json:"datacenter,omitempty"`
@@ -128,10 +137,21 @@ type RestoreBackupDeploymentParams struct {
 
 //RestoreBackupJSON performs the call
 func (c *Client) RestoreBackupJSON(params RestoreBackupParams) (string, []error) {
+	backupparams := restoreBackupParams{
+		DeploymentID: params.DeploymentID,
+		BackupID:     params.BackupID,
+		Deployment: restoreBackupDeploymentParams{Name: params.Name,
+			ClusterID:  params.ClusterID,
+			Datacenter: params.Datacenter,
+			Version:    params.Version,
+			SSL:        params.SSL,
+		},
+	}
+
 	response, body, errs := gorequest.New().Post(apibase+"deployments/"+params.DeploymentID+"/backups/"+params.BackupID+"/restore").
 		Set("Authorization", "Bearer "+c.apiToken).
 		Set("Content-type", "application/json; charset=utf-8").
-		Send(params).
+		Send(backupparams).
 		End()
 
 	if response.StatusCode != 202 { // Expect Accepted on success - assume error on anything else
