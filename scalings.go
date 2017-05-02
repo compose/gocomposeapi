@@ -33,10 +33,13 @@ type Scalings struct {
 
 //ScalingsParams represents the parameters needed to scale a deployment
 type ScalingsParams struct {
-	DeploymentID string `json:"-"`
-	Deployment   struct {
-		Units int `json:"units"`
-	} `json:"deployment"`
+	DeploymentID string               `json:"-"`
+	Deployment   ScalingSettingParams `json:"deployment"`
+}
+
+//ScalingSettingParams are the actual settings
+type ScalingSettingParams struct {
+	Units int `json:"units"`
 }
 
 //GetScalingsJSON returns raw scalings

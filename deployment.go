@@ -55,17 +55,20 @@ type deploymentsResponse struct {
 
 //CreateDeploymentParams Parameters to be completed before creating a deployment
 type CreateDeploymentParams struct {
-	Deployment struct {
-		Name         string `json:"name"`
-		AccountID    string `json:"account_id"`
-		ClusterID    string `json:"cluster_id,omitempty"`
-		Datacenter   string `json:"datacenter,omitempty"`
-		DatabaseType string `json:"type"`
-		Version      string `json:"version,omitempty"`
-		Units        int    `json:"units,omitempty"`
-		SSL          bool   `json:"ssl,omitempty"`
-		WiredTiger   bool   `json:"wired_tiger,omitempty"`
-	} `json:"deployment"`
+	Deployment DeploymentParams `json:"deployment"`
+}
+
+// DeploymentParams core parameters for a new deployment
+type DeploymentParams struct {
+	Name         string `json:"name"`
+	AccountID    string `json:"account_id"`
+	ClusterID    string `json:"cluster_id,omitempty"`
+	Datacenter   string `json:"datacenter,omitempty"`
+	DatabaseType string `json:"type"`
+	Version      string `json:"version,omitempty"`
+	Units        int    `json:"units,omitempty"`
+	SSL          bool   `json:"ssl,omitempty"`
+	WiredTiger   bool   `json:"wired_tiger,omitempty"`
 }
 
 //VersionTransition a struct wrapper for version transition information
