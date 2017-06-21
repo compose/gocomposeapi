@@ -165,6 +165,22 @@ func (c *Client) GetDeployment(deploymentid string) (*Deployment, []error) {
 	return &deployment, nil
 }
 
+//GetDeploymentByName returns a deployment of a given name
+func (c *Client) GetDeploymentByName(deploymentName string) (*Deployment, []error) {
+	deployments, errs := c.GetDeployments()
+	if errs != nil {
+		return nil, errs
+	}
+
+	for _, deployment := range *deployments {
+		if deployment.Name == deploymentName {
+			return &deployment, nil
+		}
+	}
+
+	return nil, []error{fmt.Errorf("deployment not found: %s", deploymentName)}
+}
+
 //DeprovisionDeploymentJSON performs the call
 func (c *Client) DeprovisionDeploymentJSON(deploymentID string) (string, []error) {
 
