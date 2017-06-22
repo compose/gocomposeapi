@@ -33,9 +33,16 @@ type Deployment struct {
 	Connection          ConnectionStrings `json:"connection_strings,omitempty"`
 	Notes               string            `json:"notes,omitempty"`
 	CustomerBillingCode string            `json:"customer_billing_code,omitempty"`
-	Links               struct {
-		ComposeWebUILink Link `json:"compose_web_ui"`
-	} `json:"_links"`
+	Links               Links             `json:"_links"`
+}
+
+// Links structure, part of the Deployment struct
+type Links struct {
+	ComposeWebUILink Link `json:"compose_web_ui"`
+	ScalingsLink     Link `json:"scalings"`
+	BackupsLink      Link `json:"backups"`
+	AlertsLink       Link `json:"alerts"`
+	ClusterLink      Link `json:"cluster"`
 }
 
 // ConnectionStrings structure, part of the Deployment struct
