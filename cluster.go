@@ -16,6 +16,7 @@ package composeapi
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -57,4 +58,20 @@ func (c *Client) GetClusters() (*[]Cluster, []error) {
 	clusters := clustersResponse.Embedded.Clusters
 
 	return &clusters, nil
+}
+
+//GetClusterByName returns a cluster of a given name
+func (c *Client) GetClusterByName(clusterName string) (*Cluster, []error) {
+	clusters, errs := c.GetClusters()
+	if errs != nil {
+		return nil, errs
+	}
+
+	for _, cluster := range *clusters {
+		if cluster.Name == clusterName {
+			return &cluster, nil
+		}
+	}
+
+	return nil, []error{fmt.Errorf("cluster not found: %s", clusterName)}
 }
