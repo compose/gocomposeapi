@@ -65,7 +65,7 @@ func (c *Client) GetClusterJSON(clusterid string) (string, []error) {
 	return c.getJSON("clusters/" + clusterid)
 }
 
-//GetDeployment returns deployment structure
+//GetCluster returns deployment structure
 func (c *Client) GetCluster(clusterid string) (*Cluster, []error) {
 	body, errs := c.GetClusterJSON(clusterid)
 
