@@ -60,6 +60,25 @@ func (c *Client) GetClusters() (*[]Cluster, []error) {
 	return &clusters, nil
 }
 
+//GetClusterJSON returns raw cluster
+func (c *Client) GetClusterJSON(clusterid string) (string, []error) {
+	return c.getJSON("clusters/" + clusterid)
+}
+
+//GetDeployment returns deployment structure
+func (c *Client) GetCluster(clusterid string) (*Cluster, []error) {
+	body, errs := c.GetClusterJSON(clusterid)
+
+	if errs != nil {
+		return nil, errs
+	}
+
+	cluster := Cluster{}
+	json.Unmarshal([]byte(body), &cluster)
+
+	return &cluster, nil
+}
+
 //GetClusterByName returns a cluster of a given name
 func (c *Client) GetClusterByName(clusterName string) (*Cluster, []error) {
 	clusters, errs := c.GetClusters()
