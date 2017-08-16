@@ -52,7 +52,7 @@ func (c *Client) CreateTeamRoleJSON(deploymentID string, params TeamRoleParams) 
 		Send(updateTeamRole{TeamRole: params}).
 		End()
 
-	if response.StatusCode != 200 {
+	if response.StatusCode != 201 {
 		myErrors := Errors{}
 		err := json.Unmarshal([]byte(body), &myErrors)
 		if err != nil {
