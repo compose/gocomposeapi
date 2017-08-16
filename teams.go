@@ -61,7 +61,7 @@ func (c *Client) CreateTeamJSON(params TeamParams) (string, []error) {
 		Send(teamParams).
 		End()
 
-	if response.StatusCode != 200 { // Expect OK on success - assume error on anything else
+	if response.StatusCode != 201 { // Expect Created on success - assume error on anything else
 		myErrors := Errors{}
 		err := json.Unmarshal([]byte(body), &myErrors)
 		if err != nil {
