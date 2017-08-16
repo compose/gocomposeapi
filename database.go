@@ -76,7 +76,7 @@ func (c *Client) UpdateVersionJSON(deploymentID string, version string) (string,
 }
 
 func (c *Client) UpdateVersion(deploymentID, version string) (*Recipe, []error) {
-	body, errs := c.UpgradeVersionForDeploymentJSON(deploymentID, version)
+	body, errs := c.UpdateVersionJSON(deploymentID, version)
 	if errs != nil {
 		return nil, errs
 	}
