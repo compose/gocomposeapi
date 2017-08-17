@@ -209,7 +209,7 @@ func (c *Client) GetDeploymentByName(deploymentName string) (*Deployment, []erro
 
 	for _, deployment := range *deployments {
 		if deployment.Name == deploymentName {
-			return &deployment, nil
+			return c.GetDeployment(deployment.ID)
 		}
 	}
 
