@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// The composeapi package provides an idiomatic Go wrapper around the Compose
+// API for database platform for deployment, management and monitoring.
 package composeapi
 
 import (
