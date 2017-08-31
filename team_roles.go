@@ -17,8 +17,6 @@ package composeapi
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/parnurzeal/gorequest"
 )
 
 // TeamRole the name of the role and list of teams with that role for a
@@ -46,9 +44,7 @@ type teamRolesResponse struct {
 
 // CreateTeamRoleJSON performs the raw call to add a new team role
 func (c *Client) CreateTeamRoleJSON(deploymentID string, params TeamRoleParams) (string, []error) {
-	response, body, errs := gorequest.New().Post(teamRolesEndpoint(deploymentID)).
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "application/json; charset=utf-8").
+	response, body, errs := c.newRequest("POST", teamRolesEndpoint(deploymentID)).
 		Send(updateTeamRole{TeamRole: params}).
 		End()
 
@@ -99,9 +95,7 @@ func (c *Client) GetTeamRoles(deploymentID string) (*[]TeamRole, []error) {
 
 // DeleteTeamRoleJSON is the raw call to remove a team_role
 func (c *Client) DeleteTeamRoleJSON(deploymentID string, params TeamRoleParams) []error {
-	response, body, errs := gorequest.New().Delete(teamRolesEndpoint(deploymentID)).
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "application/json; charset=utf-8").
+	response, body, errs := c.newRequest("DELETE", teamRolesEndpoint(deploymentID)).
 		Send(updateTeamRole{TeamRole: params}).
 		End()
 

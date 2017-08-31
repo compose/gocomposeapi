@@ -18,8 +18,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
-
-	"github.com/parnurzeal/gorequest"
 )
 
 // Deployment structure
@@ -128,9 +126,7 @@ type deploymentVersion struct {
 func (c *Client) CreateDeploymentJSON(params DeploymentParams) (string, []error) {
 	deploymentparams := CreateDeploymentParams{Deployment: params}
 
-	response, body, errs := gorequest.New().Post(apibase+"deployments").
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "application/json; charset=utf-8").
+	response, body, errs := c.newRequest("POST", apibase+"deployments").
 		Send(deploymentparams).
 		End()
 
@@ -220,9 +216,7 @@ func (c *Client) GetDeploymentByName(deploymentName string) (*Deployment, []erro
 //DeprovisionDeploymentJSON performs the call
 func (c *Client) DeprovisionDeploymentJSON(deploymentID string) (string, []error) {
 
-	response, body, errs := gorequest.New().Delete(apibase+"deployments/"+deploymentID).
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "application/json; charset=utf-8").
+	response, body, errs := c.newRequest("DELETE", apibase+"deployments/"+deploymentID).
 		End()
 
 	if response.StatusCode != 202 { // Expect Accepted on success - assume error on anything else
@@ -264,9 +258,7 @@ func (c *Client) PatchDeploymentJSON(params PatchDeploymentParams) (string, []er
 			Notes:               params.Notes,
 		}}
 
-	response, body, errs := gorequest.New().Patch(apibase+"deployments/"+patchParams.DeploymentID).
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "application/json; charset=utf-8").
+	response, body, errs := c.newRequest("PATCH", apibase+"deployments/"+patchParams.DeploymentID).
 		Send(patchParams).
 		End()
 

@@ -17,8 +17,6 @@ package composeapi
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/parnurzeal/gorequest"
 )
 
 // Scalings represents the used, allocated, starting and minimum unit scale
@@ -72,9 +70,7 @@ func (c *Client) SetScalingsJSON(params ScalingsParams) (string, []error) {
 		Deployment: scalingSettingParams{Units: params.Units},
 	}
 
-	response, body, errs := gorequest.New().Post(apibase+"deployments/"+params.DeploymentID+"/scalings").
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "application/json; charset=utf-8").
+	response, body, errs := c.newRequest("POST", apibase+"deployments/"+params.DeploymentID+"/scalings").
 		Send(scalingsparams).
 		End()
 
