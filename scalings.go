@@ -24,11 +24,12 @@ import (
 // Scalings represents the used, allocated, starting and minimum unit scale
 // of a deployment
 type Scalings struct {
-	AllocatedUnits int `json:"allocated_units"`
-	UsedUnits      int `json:"used_units"`
-	StartingUnits  int `json:"starting_units"`
-	MinimumUnits   int `json:"minimum_units"`
-	UnitSizeInMB   int `json:"unit_size_in_mb"`
+	AllocatedUnits int    `json:"allocated_units"`
+	UsedUnits      int    `json:"used_units"`
+	StartingUnits  int    `json:"starting_units"`
+	MinimumUnits   int    `json:"minimum_units"`
+	UnitSizeInMB   int    `json:"unit_size_in_mb"`
+	UnitType       string `json:"unit_type"`
 }
 
 //ScalingsParams represents the parameters needed to scale a deployment
