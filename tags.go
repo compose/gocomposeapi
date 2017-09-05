@@ -17,8 +17,6 @@ package composeapi
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/parnurzeal/gorequest"
 )
 
 type clusterTags struct {
@@ -54,17 +52,9 @@ func (c *Client) ReplaceTagsOnCluster(clusterID string, tags []string) (*Cluster
 }
 
 func (c *Client) updateClusterTagsJSON(clusterID, method string, tags []string) (string, []error) {
-	tagParams := clusterTags{
-		ClusterTags: clusterTagList{
-			Tags: tags,
-		},
-	}
 
-	response, body, errs := gorequest.New().
-		CustomMethod(method, tagsEndpoint(clusterID)).
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "application/json; charset=utf-8").
-		Send(tagParams).
+	response, body, errs := c.newRequest(method, tagsEndpoint(clusterID)).
+		Send(clusterTags{ClusterTags: clusterTagList{Tags: tags}}).
 		End()
 
 	if response.StatusCode != 200 { // Expect OK on success - assume error on anything else
