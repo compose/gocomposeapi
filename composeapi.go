@@ -11,8 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-// The composeapi package provides an idiomatic Go wrapper around the Compose
+//
+// Package composeapi provides an idiomatic Go wrapper around the Compose
 // API for database platform for deployment, management and monitoring.
 package composeapi
 
