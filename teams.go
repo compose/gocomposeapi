@@ -17,8 +17,6 @@ package composeapi
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/parnurzeal/gorequest"
 )
 
 // Team structure
@@ -55,9 +53,7 @@ type TeamParams struct {
 func (c *Client) CreateTeamJSON(params TeamParams) (string, []error) {
 	teamParams := createTeamParams{Team: params}
 
-	response, body, errs := gorequest.New().Post(apibase+"teams").
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "application/json; charset=utf-8").
+	response, body, errs := c.newRequest("POST", apibase+"teams").
 		Send(teamParams).
 		End()
 
@@ -145,9 +141,7 @@ func (c *Client) GetTeamByName(teamName string) (*Team, []error) {
 
 // DeleteTeamJSON performs that call
 func (c *Client) DeleteTeamJSON(teamID string) (string, []error) {
-	response, body, errs := gorequest.New().Delete(apibase+"teams/"+teamID).
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "application/json; charset=utf-8").
+	response, body, errs := c.newRequest("DELETE", apibase+"teams/"+teamID).
 		End()
 
 	if response.StatusCode != 200 { // Expect OK on success - assume error on anything else
@@ -181,9 +175,7 @@ func (c *Client) DeleteTeam(teamID string) (*Team, []error) {
 func (c *Client) PatchTeamJSON(teamID, teamName string) (string, []error) {
 	patchParams := patchTeamParams{Team: TeamParams{Name: teamName}}
 
-	response, body, errs := gorequest.New().Patch(apibase+"teams/"+teamID).
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "application/json; charset=utf-8").
+	response, body, errs := c.newRequest("PATCH", apibase+"teams/"+teamID).
 		Send(patchParams).
 		End()
 
@@ -218,10 +210,7 @@ func (c *Client) PatchTeam(teamID, teamName string) (*Team, []error) {
 func (c *Client) PutTeamUsersJSON(teamID string, userIDs []string) (string, []error) {
 	putUsers := putTeamUsersParams{UserIDs: userIDs}
 
-	response, body, errs := gorequest.New().
-		Put(apibase+"teams/"+teamID+"/users").
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "application/json; charset=utf-8").
+	response, body, errs := c.newRequest("PUT", apibase+"teams/"+teamID+"/users").
 		Send(putUsers).
 		End()
 

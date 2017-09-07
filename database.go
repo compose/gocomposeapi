@@ -17,8 +17,6 @@ package composeapi
 import (
 	"encoding/json"
 	"fmt"
-
-	"github.com/parnurzeal/gorequest"
 )
 
 //Version structure
@@ -54,10 +52,7 @@ func (c *Client) UpdateVersionJSON(deploymentID string, version string) (string,
 		Deployment: deploymentVersion{Version: version},
 	}
 
-	response, body, errs := gorequest.New().
-		Patch(apibase+"deployments/"+deploymentID+"/versions").
-		Set("Authorization", "Bearer "+c.apiToken).
-		Set("Content-type", "application/json; charset=utf-8").
+	response, body, errs := c.newRequest("PATCH", apibase+"deployments/"+deploymentID+"/versions").
 		Send(patchParams).
 		End()
 
