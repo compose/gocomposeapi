@@ -34,6 +34,7 @@ type Deployment struct {
 	Notes               string            `json:"notes,omitempty"`
 	CustomerBillingCode string            `json:"customer_billing_code,omitempty"`
 	Version             string            `json:"version,omitempty"`
+	ClusterID           string            `json:"cluster_id,omitempty"`
 	Links               Links             `json:"_links"`
 }
 
