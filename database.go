@@ -47,6 +47,7 @@ func (c *Client) GetVersionsForDeployment(deploymentid string) (*[]VersionTransi
 	return &versionTransitions, nil
 }
 
+//UpdateVersionJSON returns raw JSON as result of patching version
 func (c *Client) UpdateVersionJSON(deploymentID string, version string) (string, []error) {
 	patchParams := patchDeploymentVersionParams{
 		Deployment: deploymentVersion{Version: version},
@@ -70,6 +71,7 @@ func (c *Client) UpdateVersionJSON(deploymentID string, version string) (string,
 	return body, errs
 }
 
+// UpdateVersion returns Recipe for version update that is now taking progress
 func (c *Client) UpdateVersion(deploymentID, version string) (*Recipe, []error) {
 	body, errs := c.UpdateVersionJSON(deploymentID, version)
 	if errs != nil {

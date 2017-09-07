@@ -113,6 +113,7 @@ func (c *Client) DeleteTeamRoleJSON(deploymentID string, params TeamRoleParams) 
 	return errs
 }
 
+// DeleteTeamRole deletes a team role
 func (c *Client) DeleteTeamRole(deploymentID string, params TeamRoleParams) []error {
 	return c.DeleteTeamRoleJSON(deploymentID, params)
 }

@@ -27,26 +27,32 @@ type clusterTagList struct {
 	Tags []string `json:"tags"`
 }
 
+// AddTagsToClusterJSON returns raw result of call to add tags cluster endpoint
 func (c *Client) AddTagsToClusterJSON(clusterID string, tags []string) (string, []error) {
 	return c.updateClusterTagsJSON(clusterID, "POST", tags)
 }
 
+// AddTagsToCluster returns cluster data of cluster to which tahs have been added
 func (c *Client) AddTagsToCluster(clusterID string, tags []string) (*Cluster, []error) {
 	return c.updateClusterTags(clusterID, "POST", tags)
 }
 
+// DeleteTagsFromClusterJSON returns raw result of call to delete tags cluster endpoint
 func (c *Client) DeleteTagsFromClusterJSON(clusterID string, tags []string) (string, []error) {
 	return c.updateClusterTagsJSON(clusterID, "DELETE", tags)
 }
 
+// DeleteTagsFromCluster returns cluster data after deleting tags from cluster
 func (c *Client) DeleteTagsFromCluster(clusterID string, tags []string) (*Cluster, []error) {
 	return c.updateClusterTags(clusterID, "DELETE", tags)
 }
 
+// ReplaceTagsOnClusterJSON returns raw result of call to replace tags cluster endpoint
 func (c *Client) ReplaceTagsOnClusterJSON(clusterID string, tags []string) (string, []error) {
 	return c.updateClusterTagsJSON(clusterID, "PATCH", tags)
 }
 
+// ReplaceTagsOnCluster returns cluster data after replacing tags on cluster
 func (c *Client) ReplaceTagsOnCluster(clusterID string, tags []string) (*Cluster, []error) {
 	return c.updateClusterTags(clusterID, "PATCH", tags)
 }

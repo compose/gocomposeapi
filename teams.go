@@ -227,7 +227,7 @@ func (c *Client) PutTeamUsersJSON(teamID string, userIDs []string) (string, []er
 	return body, errs
 }
 
-// Put TeamUsers adds users to the given team
+// PutTeamUsers adds users to the given team
 func (c *Client) PutTeamUsers(teamID string, userIDs []string) (*Team, []error) {
 	body, errs := c.PutTeamUsersJSON(teamID, userIDs)
 	if errs != nil {
