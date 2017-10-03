@@ -98,6 +98,7 @@ type DeploymentParams struct {
 	SSL                 bool     `json:"ssl,omitempty"`
 	CacheMode           bool     `json:"cache_mode,omitempty"`
 	WiredTiger          bool     `json:"wired_tiger,omitempty"`
+	CacheMode           bool     `json:"cache_mode,omitempty"`
 	Notes               string   `json:"notes,omitempty"`
 	CustomerBillingCode string   `json:"customer_billing_code,omitempty"`
 }
