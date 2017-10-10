@@ -81,6 +81,7 @@ func (c *Client) newRequest(method, targetURL string) *gorequest.SuperAgent {
 		Set("Content-type", "application/json; charset=utf-8").
 		SetLogger(c.logger).
 		SetDebug(c.enableLogging).
+		SetCurlCommand(c.enableLogging).
 		Retry(c.Retries, c.RetryInterval, c.RetryStatusCodes...)
 }
 
