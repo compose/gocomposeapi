@@ -42,18 +42,20 @@ type Links struct {
 	ScalingsLink     Link `json:"scalings"`
 	BackupsLink      Link `json:"backups"`
 	AlertsLink       Link `json:"alerts"`
+	PortalUsersLink  Link `json:"portal_users"`
 	ClusterLink      Link `json:"cluster"`
 }
 
 // ConnectionStrings structure, part of the Deployment struct
 type ConnectionStrings struct {
-	Health   string      `json:"health,omitempty"`
-	SSH      string      `json:"ssh,omitempty"`
-	Admin    string      `json:"admin,omitempty"`
-	SSHAdmin string      `json:"ssh_admin,omitempty"`
-	CLI      []string    `json:"cli,omitempty"`
-	Direct   []string    `json:"direct,omitempty"`
-	Misc     interface{} `json:"misc,omitempty"`
+	Health   []string            `json:"health,omitempty"`
+	SSH      []string            `json:"ssh,omitempty"`
+	Admin    []string            `json:"admin,omitempty"`
+	SSHAdmin []string            `json:"ssh_admin,omitempty"`
+	CLI      []string            `json:"cli,omitempty"`
+	Direct   []string            `json:"direct,omitempty"`
+	Maps     []map[string]string `json:"maps,omitempty"`
+	Misc     interface{}         `json:"misc,omitempty"`
 }
 
 // deploymentsResource is used to represent and remove the JSON+HAL Embedded wrapper
