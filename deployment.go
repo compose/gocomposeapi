@@ -134,6 +134,10 @@ func (c *Client) CreateDeploymentJSON(params DeploymentParams) (string, []error)
 		Send(deploymentparams).
 		End()
 
+	if response == nil {
+		return internalError(errs)
+	}
+
 	if response.StatusCode != 202 { // Expect Accepted on success - assume error on anything else
 		myerrors := Errors{}
 		err := json.Unmarshal([]byte(body), &myerrors)
@@ -223,6 +227,10 @@ func (c *Client) DeprovisionDeploymentJSON(deploymentID string) (string, []error
 	response, body, errs := c.newRequest("DELETE", apibase+"deployments/"+deploymentID).
 		End()
 
+	if response == nil {
+		return internalError(errs)
+	}
+
 	if response.StatusCode != 202 { // Expect Accepted on success - assume error on anything else
 		errs = ProcessErrors(response.StatusCode, body)
 	}
@@ -259,6 +267,10 @@ func (c *Client) PatchDeploymentJSON(params PatchDeploymentParams) (string, []er
 	response, body, errs := c.newRequest("PATCH", apibase+"deployments/"+patchParams.DeploymentID).
 		Send(patchParams).
 		End()
+
+	if response == nil {
+		return internalError(errs)
+	}
 
 	if response.StatusCode != 200 { // Expect Accepted on success - assume error on anything else
 		errs = ProcessErrors(response.StatusCode, body)

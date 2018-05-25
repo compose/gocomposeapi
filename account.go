@@ -95,6 +95,10 @@ func (c *Client) CreateAccountUserJSON(accountID string, params UserParams) (str
 		Send(params).
 		End()
 
+	if response == nil {
+		return internalError(errs)
+	}
+
 	if response.StatusCode != 201 { // Expect Created on success
 		errs = ProcessErrors(response.StatusCode, body)
 	}
@@ -119,6 +123,10 @@ func (c *Client) DeleteAccountUserJSON(accountID, userID string) (string, []erro
 	response, body, errs := c.newRequest("DELETE",
 		apibase+"accounts/"+accountID+"/users/"+userID).
 		End()
+
+	if response == nil {
+		return internalError(errs)
+	}
 
 	if response.StatusCode != 200 { // Expect OK on success
 		errs = ProcessErrors(response.StatusCode, body)

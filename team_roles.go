@@ -16,6 +16,7 @@ package composeapi
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 )
 
@@ -47,6 +48,10 @@ func (c *Client) CreateTeamRoleJSON(deploymentID string, params TeamRoleParams) 
 	response, body, errs := c.newRequest("POST", teamRolesEndpoint(deploymentID)).
 		Send(updateTeamRole{TeamRole: params}).
 		End()
+
+	if response == nil {
+		return internalError(errs)
+	}
 
 	if response.StatusCode != 201 {
 		myErrors := Errors{}
@@ -98,6 +103,13 @@ func (c *Client) DeleteTeamRoleJSON(deploymentID string, params TeamRoleParams) 
 	response, body, errs := c.newRequest("DELETE", teamRolesEndpoint(deploymentID)).
 		Send(updateTeamRole{TeamRole: params}).
 		End()
+
+	if response == nil {
+		if len(errs) > 0 {
+			return errs
+		}
+		return []error{errors.New(gorequestInternalFailure)}
+	}
 
 	if response.StatusCode != 204 { // No response body is returned on success
 		errs = ProcessErrors(response.StatusCode, body)

@@ -57,6 +57,10 @@ func (c *Client) CreateTeamJSON(params TeamParams) (string, []error) {
 		Send(teamParams).
 		End()
 
+	if response == nil {
+		return internalError(errs)
+	}
+
 	if response.StatusCode != 201 { // Expect Created on success - assume error on anything else
 		errs = ProcessErrors(response.StatusCode, body)
 	}
@@ -137,6 +141,10 @@ func (c *Client) DeleteTeamJSON(teamID string) (string, []error) {
 	response, body, errs := c.newRequest("DELETE", apibase+"teams/"+teamID).
 		End()
 
+	if response == nil {
+		return internalError(errs)
+	}
+
 	if response.StatusCode != 200 { // Expect OK on success - assume error on anything else
 		errs = ProcessErrors(response.StatusCode, body)
 	}
@@ -165,6 +173,10 @@ func (c *Client) PatchTeamJSON(teamID, teamName string) (string, []error) {
 		Send(patchParams).
 		End()
 
+	if response == nil {
+		return internalError(errs)
+	}
+
 	if response.StatusCode != 200 { // Expect OK on success - assume error on anything else
 		errs = ProcessErrors(response.StatusCode, body)
 	}
@@ -192,6 +204,10 @@ func (c *Client) PutTeamUsersJSON(teamID string, userIDs []string) (string, []er
 	response, body, errs := c.newRequest("PUT", apibase+"teams/"+teamID+"/users").
 		Send(putUsers).
 		End()
+
+	if response == nil {
+		return internalError(errs)
+	}
 
 	if response.StatusCode != 200 { // Expect OK on success - assume error on anything else
 		errs = ProcessErrors(response.StatusCode, body)

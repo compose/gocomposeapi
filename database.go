@@ -56,6 +56,10 @@ func (c *Client) UpdateVersionJSON(deploymentID string, version string) (string,
 		Send(patchParams).
 		End()
 
+	if response == nil {
+		return internalError(errs)
+	}
+
 	if response.StatusCode != 200 { // Expect OK on success - assume error on anything else
 		errs = ProcessErrors(response.StatusCode, body)
 	}

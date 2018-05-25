@@ -58,6 +58,10 @@ func (c *Client) createDeploymentWhitelistJSON(deploymentID string, params Deplo
 		Send(whitelistParams).
 		End()
 
+	if response == nil {
+		return internalError(errs)
+	}
+
 	if response.StatusCode != 202 {
 		myerrors := Errors{}
 		err := json.Unmarshal([]byte(body), &myerrors)

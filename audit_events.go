@@ -57,6 +57,10 @@ func (c *Client) GetAuditEventsJSON(params AuditEventsParams) (string, []error) 
 		Query(params).
 		End()
 
+	if response == nil {
+		return internalError(errs)
+	}
+
 	if response.StatusCode != 200 { // Expect Accepted on success - assume error on anything else
 		myerrors := Errors{}
 		err := json.Unmarshal([]byte(body), &myerrors)
@@ -85,6 +89,10 @@ func (c *Client) GetAuditEvents(params AuditEventsParams) (*[]AuditEvent, []erro
 func (c *Client) GetAuditEventJSON(id string) (string, []error) {
 	response, body, errs := c.newRequest("GET", apibase+"/audit_events/"+id).
 		End()
+
+	if response == nil {
+		return internalError(errs)
+	}
 
 	if response.StatusCode != 200 { // Expect Accepted on success - assume error on anything else
 		errs = ProcessErrors(response.StatusCode, body)
