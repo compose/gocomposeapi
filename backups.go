@@ -64,6 +64,10 @@ func (c *Client) StartBackupForDeploymentJSON(deploymentid string) (string, []er
 	response, body, errs := c.newRequest("POST", apibase+"deployments/"+deploymentid+"/backups").
 		End()
 
+	if response == nil {
+		return internalError(errs)
+	}
+
 	if response.StatusCode != 202 { // Expect Accepted on success - assume error on anything else
 		errs = ProcessErrors(response.StatusCode, body)
 	}
@@ -144,6 +148,10 @@ func (c *Client) RestoreBackupJSON(params RestoreBackupParams) (string, []error)
 	response, body, errs := c.newRequest("POST", apibase+"deployments/"+params.DeploymentID+"/backups/"+params.BackupID+"/restore").
 		Send(backupparams).
 		End()
+
+	if response == nil {
+		return internalError(errs)
+	}
 
 	if response.StatusCode != 202 { // Expect Accepted on success - assume error on anything else
 		errs = ProcessErrors(response.StatusCode, body)

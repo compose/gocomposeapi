@@ -63,6 +63,10 @@ func (c *Client) updateClusterTagsJSON(clusterID, method string, tags []string) 
 		Send(clusterTags{ClusterTags: clusterTagList{Tags: tags}}).
 		End()
 
+	if response == nil {
+		return internalError(errs)
+	}
+
 	if response.StatusCode != 200 { // Expect OK on success - assume error on anything else
 		errs = ProcessErrors(response.StatusCode, body)
 	}

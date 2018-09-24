@@ -19,6 +19,7 @@ package composeapi
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -30,7 +31,8 @@ import (
 )
 
 const (
-	apibase = "https://api.compose.io/2016-07/"
+	apibase                  = "https://api.compose.io/2016-07/"
+	gorequestInternalFailure = "An internal error occurred. Could not complete request"
 )
 
 // Client is a structure that holds session information for the API
@@ -122,6 +124,9 @@ func (c *Client) SetAPIToken(newtoken string) {
 //GetJSON Gets JSON string of content at an endpoint
 func (c *Client) getJSON(endpoint string) (string, []error) {
 	response, body, errs := c.newRequest("GET", apibase+endpoint).End()
+	if response == nil {
+		return internalError(errs)
+	}
 
 	if response.StatusCode != 200 {
 		errs = ProcessErrors(response.StatusCode, body)
@@ -150,4 +155,11 @@ func ProcessErrors(statuscode int, body string) []error {
 	}
 
 	return errs
+}
+
+func internalError(errs []error) (string, []error) {
+	if len(errs) > 0 {
+		return "", errs
+	}
+	return "", []error{errors.New(gorequestInternalFailure)}
 }

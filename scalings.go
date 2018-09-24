@@ -73,6 +73,10 @@ func (c *Client) SetScalingsJSON(params ScalingsParams) (string, []error) {
 		Send(scalingsparams).
 		End()
 
+	if response == nil {
+		return internalError(errs)
+	}
+
 	if response.StatusCode != 200 { // Expect Accepted on success - assume error on anything else
 		errs = ProcessErrors(response.StatusCode, body)
 	}
